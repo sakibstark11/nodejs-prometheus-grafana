@@ -1,0 +1,25 @@
+name: nodejs-prometheus-grafana
+services:
+  app:
+    container_name: app
+    build: ./app/
+    ports:
+      - ${APP_PORT}:3000
+    volumes:
+      - ./app:/app
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:main
+    ports:
+      - ${PROM_PORT}:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - app
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - ${GRAFANA_PORT}:3000
+    volumes:
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
